@@ -1,8 +1,13 @@
 import { useState } from 'react'
 
-function Quiz({ question }) {
+function Quiz({ question, onAnswer }) {
   const [selected, setSelected] = useState(null)
   const answered = selected !== null
+
+  function choose(i) {
+    setSelected(i)
+    onAnswer(i === question.answer)
+  }
 
   return (
     <div className="quiz">
@@ -16,7 +21,7 @@ function Quiz({ question }) {
             key={i}
             className={cls}
             disabled={answered}
-            onClick={() => setSelected(i)}
+            onClick={() => choose(i)}
           >
             {option}
           </button>
