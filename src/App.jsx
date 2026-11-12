@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import lessons from './content/lessons.json'
 import LessonCard from './components/LessonCard'
+import BadgeList from './components/BadgeList'
+import { getEarnedIds } from './gamification/badges'
 import './App.css'
 
 const POINTS_PER_CORRECT = 10
@@ -11,17 +13,29 @@ function App() {
   const [answered, setAnswered] = useState(false)
   const [points, setPoints] = useState(0)
   const [streak, setStreak] = useState(0)
+  const [bestStreak, setBestStreak] = useState(0)
+  const [correct, setCorrect] = useState(0)
 
   const finished = index >= lessons.length
   const progress = Math.round((index / lessons.length) * 100)
   const position = finished ? lessons.length : index + 1
   const level = Math.floor(points / POINTS_PER_LEVEL) + 1
 
+  const earnedIds = getEarnedIds({
+    correct,
+    bestStreak,
+    finished,
+    total: lessons.length,
+  })
+
   function handleAnswer(isCorrect) {
     setAnswered(true)
     if (isCorrect) {
+      const newStreak = streak + 1
       setPoints(points + POINTS_PER_CORRECT)
-      setStreak(streak + 1)
+      setStreak(newStreak)
+      setBestStreak(Math.max(bestStreak, newStreak))
+      setCorrect(correct + 1)
     } else {
       setStreak(0)
     }
@@ -42,6 +56,8 @@ function App() {
         <span>Seri: {streak}</span>
       </div>
 
+      <BadgeList earnedIds={earnedIds} />
+
       <div className="progress">
         <div className="progress-bar" style={{ width: `${progress}%` }} />
       </div>
@@ -54,7 +70,8 @@ function App() {
           <h2>Tebrikler!</h2>
           <p>Tüm kartları tamamladın.</p>
           <p>
-            Toplam puan: {points}, Seviye: {level}
+            Toplam puan: {points}, Seviye: {level}, Doğru: {correct} /{' '}
+            {lessons.length}
           </p>
         </div>
       ) : (

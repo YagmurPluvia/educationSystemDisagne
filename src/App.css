@@ -85,3 +85,24 @@
   font-size: 14px;
   color: #0f4c5c;
 }
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.badge {
+  background: #eef0f2;
+  color: #8a949b;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 13px;
+}
+
+.badge.earned {
+  background: #fff3e0;
+  color: #b5540b;
+  border: 1px solid #e36414;
+  font-weight: 600;
+}
