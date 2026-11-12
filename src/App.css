@@ -1,25 +1,43 @@
-.app {
-  max-width: 640px;
-  margin: 0 auto;
-  padding: 24px 16px;
+.quiz {
+  margin-top: 20px;
+  border-top: 1px solid #dfe6ea;
+  padding-top: 16px;
 }
 
-.card {
-  background: #ffffff;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+.prompt {
+  white-space: pre-wrap;
+  font-weight: 600;
 }
 
-.card h2 {
-  margin-top: 0;
-  color: #0f4c5c;
-}
-
-.code {
-  background: #1f2a37;
-  color: #f3f6f8;
-  padding: 12px;
+.option {
+  display: block;
+  width: 100%;
+  text-align: left;
+  margin: 8px 0;
+  padding: 10px 12px;
+  border: 1px solid #b9c5cc;
   border-radius: 8px;
-  overflow-x: auto;
+  background: #ffffff;
+  color: #1f2a37;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.option:hover:not(:disabled) {
+  background: #eef3f5;
+}
+
+.option.correct {
+  background: #d8f3e4;
+  border-color: #2a9d8f;
+}
+
+.option.wrong {
+  background: #fde2d3;
+  border-color: #e36414;
+}
+
+.feedback {
+  margin-top: 12px;
+  font-weight: 600;
 }
