@@ -1,0 +1,114 @@
+[
+  {
+    "id": "print",
+    "order": 1,
+    "difficulty": 1,
+    "title": "İlk komut: print()",
+    "text": "print() ekrana yazı yazdırır. Yazıları tırnak içinde verirsin, tırnaklar ekranda görünmez.",
+    "code": "print(\"Merhaba\")",
+    "question": {
+      "prompt": "print(\"Merhaba\") komutu ekranda ne gösterir?",
+      "options": ["\"Merhaba\" (tırnaklarla)", "Merhaba", "print Merhaba", "Hata verir"],
+      "answer": 1,
+      "explanation": "Tırnaklar Python'a bunun bir yazı olduğunu söyler, ekrana basılmaz."
+    }
+  },
+  {
+    "id": "degisken",
+    "order": 2,
+    "difficulty": 1,
+    "title": "Değişkenler",
+    "text": "Değişken, bir değere verdiğin addır. = işareti 'eşittir' değil, 'ata' demektir. Değişken sonradan değiştirilebilir.",
+    "code": "x = 5\nx = x + 2\nprint(x)",
+    "question": {
+      "prompt": "x = 5\nx = x + 2\nprint(x)\n\nSon satır ne yazdırır?",
+      "options": ["5", "2", "7", "x"],
+      "answer": 2,
+      "explanation": "x önce 5 olur, sonra x + 2 hesaplanıp yine x'e atanır, yani 7."
+    }
+  },
+  {
+    "id": "veri-tipleri",
+    "order": 3,
+    "difficulty": 1,
+    "title": "Veri tipleri",
+    "text": "Dört temel tip: int (tam sayı), float (ondalıklı sayı), str (yazı), bool (True veya False). type() bir değerin tipini söyler.",
+    "code": "type(3)      # int\ntype(3.0)    # float\ntype(\"3\")    # str\ntype(True)   # bool",
+    "question": {
+      "prompt": "type(3.0) hangi tipi verir?",
+      "options": ["int", "float", "str", "bool"],
+      "answer": 1,
+      "explanation": "Noktalı yazılan sayı, değeri tam sayı gibi görünse de float'tır."
+    }
+  },
+  {
+    "id": "operatorler",
+    "order": 4,
+    "difficulty": 2,
+    "title": "Aritmetik operatörler",
+    "text": "+ - * / olağan işlemlerdir. // tam bölme (küsuratı atar), % kalan, ** üs alma.",
+    "code": "7 // 2   # 3\n7 % 2    # 1\n2 ** 3   # 8",
+    "question": {
+      "prompt": "print(7 // 2) ne yazdırır?",
+      "options": ["3.5", "3", "4", "1"],
+      "answer": 1,
+      "explanation": "// tam bölmedir: 7'de 2 üç kez var, küsurat atılır."
+    }
+  },
+  {
+    "id": "kosullar",
+    "order": 5,
+    "difficulty": 2,
+    "title": "Koşullar: if, elif, else",
+    "text": "Program, koşula göre farklı kodlar çalıştırabilir. Python yukarıdan aşağı bakar ve doğru olan ilk koşulun bloğunu çalıştırıp durur. Bloklar girintiyle yazılır.",
+    "code": "x = 3\nif x > 5:\n    print(\"A\")\nelif x > 2:\n    print(\"B\")\nelse:\n    print(\"C\")",
+    "question": {
+      "prompt": "x = 3\nif x > 5:\n    print(\"A\")\nelif x > 2:\n    print(\"B\")\nelse:\n    print(\"C\")\n\nNe yazdırır?",
+      "options": ["A", "B", "C", "B ve C"],
+      "answer": 1,
+      "explanation": "x > 5 yanlış, x > 2 doğru. İlk doğru koşul çalışır ve Python geri kalanına bakmaz."
+    }
+  },
+  {
+    "id": "listeler",
+    "order": 6,
+    "difficulty": 2,
+    "title": "Listeler",
+    "text": "Liste, birden çok değeri sırayla tutar. Sıra numarası (indeks) 0'dan başlar. Sondaki eleman için -1 de kullanılır.",
+    "code": "meyveler = [\"elma\", \"armut\", \"kiraz\"]\nprint(meyveler[0])   # elma",
+    "question": {
+      "prompt": "meyveler = [\"elma\", \"armut\", \"kiraz\"]\nprint(meyveler[1])\n\nNe yazdırır?",
+      "options": ["elma", "armut", "kiraz", "Hata verir"],
+      "answer": 1,
+      "explanation": "İndeks 0'dan başlar: 0 elma, 1 armut, 2 kiraz."
+    }
+  },
+  {
+    "id": "for-dongusu",
+    "order": 7,
+    "difficulty": 3,
+    "title": "for döngüsü",
+    "text": "for, bir işi tekrarlar. range(3) sırayla 0, 1, 2 üretir; 3 dahil değildir.",
+    "code": "for i in range(3):\n    print(i)",
+    "question": {
+      "prompt": "for i in range(3):\n    print(i)\n\nEkrana hangi sayılar yazılır?",
+      "options": ["1, 2, 3", "0, 1, 2", "0, 1, 2, 3", "3"],
+      "answer": 1,
+      "explanation": "range(3) 0'dan başlar ve 3'e gelmeden durur."
+    }
+  },
+  {
+    "id": "fonksiyonlar",
+    "order": 8,
+    "difficulty": 3,
+    "title": "Fonksiyonlar",
+    "text": "Fonksiyon, bir kod parçasına ad verip tekrar kullanmanı sağlar. def ile tanımlanır, return sonucu geri verir.",
+    "code": "def topla(a, b):\n    return a + b\n\nprint(topla(2, 3))   # 5",
+    "question": {
+      "prompt": "def topla(a, b):\n    return a + b\n\nprint(topla(2, 3))\n\nNe yazdırır?",
+      "options": ["23", "5", "topla", "Hiçbir şey"],
+      "answer": 1,
+      "explanation": "Fonksiyon a ve b'yi toplar, return ile 5'i geri verir, print de onu yazdırır."
+    }
+  }
+]
