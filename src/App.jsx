@@ -3,18 +3,27 @@ import lessons from './content/lessons.json'
 import LessonCard from './components/LessonCard'
 import BadgeList from './components/BadgeList'
 import { getEarnedIds } from './gamification/badges'
+import {
+  loadProgress,
+  saveProgress,
+  clearProgress,
+  DEFAULT_STATE,
+} from './storage/progress'
 import './App.css'
 
 const POINTS_PER_CORRECT = 10
 const POINTS_PER_LEVEL = 30
 
+const initial = loadProgress()
+initial.index = Math.min(Math.max(initial.index, 0), lessons.length)
+
 function App() {
-  const [index, setIndex] = useState(0)
+  const [index, setIndex] = useState(initial.index)
   const [answered, setAnswered] = useState(false)
-  const [points, setPoints] = useState(0)
-  const [streak, setStreak] = useState(0)
-  const [bestStreak, setBestStreak] = useState(0)
-  const [correct, setCorrect] = useState(0)
+  const [points, setPoints] = useState(initial.points)
+  const [streak, setStreak] = useState(initial.streak)
+  const [bestStreak, setBestStreak] = useState(initial.bestStreak)
+  const [correct, setCorrect] = useState(initial.correct)
 
   const finished = index >= lessons.length
   const progress = Math.round((index / lessons.length) * 100)
@@ -42,7 +51,19 @@ function App() {
   }
 
   function next() {
-    setIndex(index + 1)
+    const newIndex = index + 1
+    setIndex(newIndex)
+    setAnswered(false)
+    saveProgress({ index: newIndex, points, streak, bestStreak, correct })
+  }
+
+  function reset() {
+    clearProgress()
+    setIndex(DEFAULT_STATE.index)
+    setPoints(DEFAULT_STATE.points)
+    setStreak(DEFAULT_STATE.streak)
+    setBestStreak(DEFAULT_STATE.bestStreak)
+    setCorrect(DEFAULT_STATE.correct)
     setAnswered(false)
   }
 
@@ -88,6 +109,10 @@ function App() {
           )}
         </>
       )}
+
+      <button className="reset" onClick={reset}>
+        Baştan başla
+      </button>
     </main>
   )
 }

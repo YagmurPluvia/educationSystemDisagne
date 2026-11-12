@@ -106,3 +106,14 @@
   border: 1px solid #e36414;
   font-weight: 600;
 }
+.reset {
+  display: block;
+  margin-top: 32px;
+  padding: 8px 14px;
+  border: 1px solid #b9c5cc;
+  border-radius: 8px;
+  background: transparent;
+  color: #6c757d;
+  font-size: 13px;
+  cursor: pointer;
+}
