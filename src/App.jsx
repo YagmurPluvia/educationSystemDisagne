@@ -1,9 +1,11 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import lessons from './content/lessons.json'
 import LessonCard from './components/LessonCard'
 import BadgeList from './components/BadgeList'
+import Summary from './components/Summary'
 import { getEarnedIds } from './gamification/badges'
 import { createQueue, answerCurrent } from './adaptive/scheduler'
+import { loadLog, appendEvent, clearLog } from './analytics/log'
 import {
   loadProgress,
   saveProgress,
@@ -15,6 +17,7 @@ import './App.css'
 const POINTS_NEW = 10
 const POINTS_REPEAT = 5
 const POINTS_PER_LEVEL = 30
+const MAX_MS = 120000
 
 const STAGE_LABELS = {
   new: 'Yeni kart',
@@ -46,6 +49,8 @@ function App() {
   const [bestStreak, setBestStreak] = useState(initial.bestStreak)
   const [correct, setCorrect] = useState(initial.correct)
   const [firstTry, setFirstTry] = useState(initial.firstTry)
+  const [events, setEvents] = useState(() => loadLog())
+  const startRef = useRef(Date.now())
 
   const total = lessons.length
   const finished = queue.length === 0
@@ -66,11 +71,21 @@ function App() {
   })
 
   function handleAnswer(isCorrect) {
+    const ms = Math.min(Date.now() - startRef.current, MAX_MS)
     const result = answerCurrent(queue, isCorrect)
-    setPending(result)
+    const event = {
+      t: Date.now(),
+      id: current.id,
+      stage: result.stage,
+      correct: isCorrect,
+      ms,
+    }
+    setPending({ ...result, event })
     if (isCorrect) {
       const newStreak = streak + 1
-      setPoints(points + (result.stage === 'new' ? POINTS_NEW : POINTS_REPEAT))
+      if (result.completed) {
+        setPoints(points + (result.firstTry ? POINTS_NEW : POINTS_REPEAT))
+      }
       setStreak(newStreak)
       setBestStreak(Math.max(bestStreak, newStreak))
       setCorrect(correct + 1)
@@ -82,9 +97,11 @@ function App() {
 
   function next() {
     const newQueue = pending.queue
+    setEvents(appendEvent(pending.event))
     setQueue(newQueue)
     setPending(null)
     setStep(step + 1)
+    startRef.current = Date.now()
     saveProgress({
       queue: newQueue,
       points,
@@ -97,9 +114,12 @@ function App() {
 
   function reset() {
     clearProgress()
+    clearLog()
+    setEvents([])
     setQueue(createQueue(allIds))
     setPending(null)
     setStep(0)
+    startRef.current = Date.now()
     setPoints(DEFAULT_STATE.points)
     setStreak(DEFAULT_STATE.streak)
     setBestStreak(DEFAULT_STATE.bestStreak)
@@ -107,7 +127,7 @@ function App() {
     setFirstTry(DEFAULT_STATE.firstTry)
   }
 
-    return (
+  return (
     <div className="layout">
       <aside className="side">
         <h1>Python Mikro Öğrenme</h1>
@@ -144,16 +164,14 @@ function App() {
 
       <main className="main">
         {finished ? (
-          <div className="card">
-            <h2>Tebrikler!</h2>
-            <p>Tüm kartları tamamladın.</p>
-            <p>
-              Toplam puan: {points}, Seviye: {level}
-            </p>
-            <p>
-              İlk denemede doğru: {firstTry} / {total}
-            </p>
-          </div>
+          <Summary
+            events={events}
+            lessons={lessons}
+            points={points}
+            level={level}
+            firstTry={firstTry}
+            total={total}
+          />
         ) : (
           <>
             <LessonCard
