@@ -1,10 +1,13 @@
 import { useState, useRef } from 'react'
 import lessons from './content/lessons.json'
+import tests from './content/tests.json'
 import LessonCard from './components/LessonCard'
 import BadgeList from './components/BadgeList'
 import Summary from './components/Summary'
+import TestForm from './components/TestForm'
 import { getEarnedIds } from './gamification/badges'
 import { createQueue, answerCurrent } from './adaptive/scheduler'
+import { compare } from './assessment/score'
 import { loadLog, appendEvent, clearLog } from './analytics/log'
 import {
   loadProgress,
@@ -25,6 +28,13 @@ const STAGE_LABELS = {
   confirm: 'Pekiştirme',
 }
 
+const PHASE_LABELS = {
+  pre: 'Ön test',
+  learn: 'Öğrenme',
+  post: 'Son test',
+  done: 'Özet',
+}
+
 const allIds = lessons.map((l) => l.id)
 
 function isValidQueue(q) {
@@ -38,6 +48,7 @@ const saved = loadProgress()
 const initial = {
   ...saved,
   queue: isValidQueue(saved.queue) ? saved.queue : createQueue(allIds),
+  phase: PHASE_LABELS[saved.phase] ? saved.phase : 'pre',
 }
 
 function App() {
@@ -49,6 +60,9 @@ function App() {
   const [bestStreak, setBestStreak] = useState(initial.bestStreak)
   const [correct, setCorrect] = useState(initial.correct)
   const [firstTry, setFirstTry] = useState(initial.firstTry)
+  const [phase, setPhase] = useState(initial.phase)
+  const [preAnswers, setPreAnswers] = useState(initial.preAnswers)
+  const [postAnswers, setPostAnswers] = useState(initial.postAnswers)
   const [events, setEvents] = useState(() => loadLog())
   const startRef = useRef(Date.now())
 
@@ -69,6 +83,26 @@ function App() {
     firstTry,
     total,
   })
+
+  const comparison =
+    preAnswers && postAnswers
+      ? compare(tests.A, preAnswers, tests.B, postAnswers)
+      : null
+
+  function persist(partial = {}) {
+    saveProgress({
+      queue,
+      points,
+      streak,
+      bestStreak,
+      correct,
+      firstTry,
+      phase,
+      preAnswers,
+      postAnswers,
+      ...partial,
+    })
+  }
 
   function handleAnswer(isCorrect) {
     const ms = Math.min(Date.now() - startRef.current, MAX_MS)
@@ -102,14 +136,25 @@ function App() {
     setPending(null)
     setStep(step + 1)
     startRef.current = Date.now()
-    saveProgress({
-      queue: newQueue,
-      points,
-      streak,
-      bestStreak,
-      correct,
-      firstTry,
-    })
+    persist({ queue: newQueue })
+  }
+
+  function finishPre(answers) {
+    setPreAnswers(answers)
+    setPhase('learn')
+    startRef.current = Date.now()
+    persist({ preAnswers: answers, phase: 'learn' })
+  }
+
+  function startPost() {
+    setPhase('post')
+    persist({ phase: 'post' })
+  }
+
+  function finishPost(answers) {
+    setPostAnswers(answers)
+    setPhase('done')
+    persist({ postAnswers: answers, phase: 'done' })
   }
 
   function reset() {
@@ -125,12 +170,81 @@ function App() {
     setBestStreak(DEFAULT_STATE.bestStreak)
     setCorrect(DEFAULT_STATE.correct)
     setFirstTry(DEFAULT_STATE.firstTry)
+    setPhase(DEFAULT_STATE.phase)
+    setPreAnswers(DEFAULT_STATE.preAnswers)
+    setPostAnswers(DEFAULT_STATE.postAnswers)
+  }
+
+  let content
+  if (phase === 'pre') {
+    content = (
+      <TestForm
+        key="pre"
+        title="Ön test"
+        intro="Başlamadan önce mevcut bilgini ölçüyoruz. Bu testte puan ve geri bildirim yok."
+        items={tests.A}
+        onFinish={finishPre}
+      />
+    )
+  } else if (phase === 'post') {
+    content = (
+      <TestForm
+        key="post"
+        title="Son test"
+        intro="Şimdi öğrendiklerini ölçüyoruz. Sorular ön testten farklı, aynı kavramları kapsıyor."
+        items={tests.B}
+        onFinish={finishPost}
+      />
+    )
+  } else if (phase === 'done') {
+    content = (
+      <Summary
+        events={events}
+        lessons={lessons}
+        points={points}
+        level={level}
+        firstTry={firstTry}
+        total={total}
+        comparison={comparison}
+      />
+    )
+  } else if (finished) {
+    content = (
+      <div className="card">
+        <h2>Kartlar tamamlandı!</h2>
+        <p>
+          Puan: {points}, Seviye: {level}. Şimdi son teste geçip ne kadar
+          öğrendiğini ölçelim.
+        </p>
+        <button className="next" onClick={startPost}>
+          Son teste geç
+        </button>
+      </div>
+    )
+  } else {
+    content = (
+      <>
+        <LessonCard
+          key={step}
+          lesson={lesson}
+          stage={current.stage}
+          stageLabel={STAGE_LABELS[current.stage]}
+          onAnswer={handleAnswer}
+        />
+        {answered && (
+          <button className="next" onClick={next}>
+            {pending.queue.length === 0 ? 'Bitir' : 'Sonraki kart'}
+          </button>
+        )}
+      </>
+    )
   }
 
   return (
     <div className="layout">
       <aside className="side">
         <h1>Python Mikro Öğrenme</h1>
+        <p className="phase">Aşama: {PHASE_LABELS[phase]}</p>
 
         <div className="stats">
           <div className="stat">
@@ -162,33 +276,7 @@ function App() {
         </button>
       </aside>
 
-      <main className="main">
-        {finished ? (
-          <Summary
-            events={events}
-            lessons={lessons}
-            points={points}
-            level={level}
-            firstTry={firstTry}
-            total={total}
-          />
-        ) : (
-          <>
-            <LessonCard
-              key={step}
-              lesson={lesson}
-              stage={current.stage}
-              stageLabel={STAGE_LABELS[current.stage]}
-              onAnswer={handleAnswer}
-            />
-            {answered && (
-              <button className="next" onClick={next}>
-                {pending.queue.length === 0 ? 'Bitir' : 'Sonraki kart'}
-              </button>
-            )}
-          </>
-        )}
-      </main>
+      <main className="main">{content}</main>
     </div>
   )
 }

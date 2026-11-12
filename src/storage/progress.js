@@ -7,6 +7,9 @@ export const DEFAULT_STATE = {
   bestStreak: 0,
   correct: 0,
   firstTry: 0,
+  phase: 'pre',
+  preAnswers: null,
+  postAnswers: null,
 }
 
 export function loadProgress() {

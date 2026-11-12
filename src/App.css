@@ -277,3 +277,43 @@
   padding-left: 20px;
   line-height: 1.7;
 }
+.phase {
+  margin: -8px 0 16px;
+  font-size: 13px;
+  color: #f4a261;
+  font-weight: 600;
+}
+
+.intro {
+  color: #6c757d;
+  font-size: 14px;
+  margin-top: 0;
+}
+
+.option.selected {
+  background: #dff1ee;
+  border-color: #2a9d8f;
+}
+
+.next:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.concepts {
+  width: 100%;
+  margin-top: 12px;
+  border-collapse: collapse;
+}
+
+.concepts th,
+.concepts td {
+  padding: 6px 10px;
+  border-bottom: 1px solid #dfe6ea;
+  text-align: left;
+}
+
+.concepts th {
+  color: #0f4c5c;
+  font-size: 13px;
+}

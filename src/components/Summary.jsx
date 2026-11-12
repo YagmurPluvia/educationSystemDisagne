@@ -2,9 +2,18 @@ import { summarize } from '../analytics/summary'
 
 const pct = (v) => (v === null ? '–' : `%${v}`)
 
-function Summary({ events, lessons, points, level, firstTry, total }) {
+const CONCEPT_NAMES = {
+  variable: 'Değişkenler',
+  operators: 'Operatörler',
+  conditions: 'Koşullar',
+  lists: 'Listeler',
+  loops: 'Döngüler',
+}
+
+function Summary({ events, lessons, points, level, firstTry, total, comparison }) {
   const s = summarize(events)
   const title = (id) => lessons.find((l) => l.id === id)?.title ?? id
+  const c = comparison
 
   return (
     <div className="card">
@@ -13,6 +22,55 @@ function Summary({ events, lessons, points, level, firstTry, total }) {
         Tüm kartları tamamladın. Toplam puan: {points}, Seviye: {level},
         ilk denemede doğru: {firstTry} / {total}
       </p>
+
+      {c && (
+        <>
+          <h3>Ön test ve son test</h3>
+          <div className="summary">
+            <div className="tile">
+              <b>
+                {c.pre.correct} / {c.pre.total}
+              </b>
+              <small>Ön test</small>
+            </div>
+            <div className="tile">
+              <b>
+                {c.post.correct} / {c.post.total}
+              </b>
+              <small>Son test</small>
+            </div>
+            <div className="tile">
+              <b>
+                {c.gain > 0 ? '+' : ''}
+                {c.gain}
+              </b>
+              <small>Fark (doğru sayısı)</small>
+            </div>
+            <div className="tile">
+              <b>{c.normalizedGain === null ? '–' : c.normalizedGain}</b>
+              <small>Normalize kazanç</small>
+            </div>
+          </div>
+          <table className="concepts">
+            <thead>
+              <tr>
+                <th>Kavram</th>
+                <th>Ön test</th>
+                <th>Son test</th>
+              </tr>
+            </thead>
+            <tbody>
+              {c.byConcept.map((row) => (
+                <tr key={row.concept}>
+                  <td>{CONCEPT_NAMES[row.concept] ?? row.concept}</td>
+                  <td>{row.pre ? '✓' : '✗'}</td>
+                  <td>{row.post ? '✓' : '✗'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </>
+      )}
 
       <h3>Öğrenme özeti</h3>
       <div className="summary">
