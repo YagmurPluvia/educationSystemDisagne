@@ -107,57 +107,71 @@ function App() {
     setFirstTry(DEFAULT_STATE.firstTry)
   }
 
-  return (
-    <main className="app">
-      <h1>Python Mikro Öğrenme</h1>
+    return (
+    <div className="layout">
+      <aside className="side">
+        <h1>Python Mikro Öğrenme</h1>
 
-      <div className="stats">
-        <span>Puan: {points}</span>
-        <span>Seviye: {level}</span>
-        <span>Seri: {streak}</span>
-      </div>
-
-      <BadgeList earnedIds={earnedIds} />
-
-      <div className="progress">
-        <div className="progress-bar" style={{ width: `${progress}%` }} />
-      </div>
-      <p className="progress-text">
-        Tamamlanan: {completedCount} / {total} · Kuyrukta: {queue.length} kart
-      </p>
-
-      {finished ? (
-        <div className="card">
-          <h2>Tebrikler!</h2>
-          <p>Tüm kartları tamamladın.</p>
-          <p>
-            Toplam puan: {points}, Seviye: {level}
-          </p>
-          <p>
-            İlk denemede doğru: {firstTry} / {total}
-          </p>
+        <div className="stats">
+          <div className="stat">
+            <b>{points}</b>
+            <small>Puan</small>
+          </div>
+          <div className="stat">
+            <b>{level}</b>
+            <small>Seviye</small>
+          </div>
+          <div className="stat">
+            <b>{streak}</b>
+            <small>Seri</small>
+          </div>
         </div>
-      ) : (
-        <>
-          <LessonCard
-            key={step}
-            lesson={lesson}
-            stage={current.stage}
-            stageLabel={STAGE_LABELS[current.stage]}
-            onAnswer={handleAnswer}
-          />
-          {answered && (
-            <button className="next" onClick={next}>
-              {pending.queue.length === 0 ? 'Bitir' : 'Sonraki kart'}
-            </button>
-          )}
-        </>
-      )}
 
-      <button className="reset" onClick={reset}>
-        Baştan başla
-      </button>
-    </main>
+        <BadgeList earnedIds={earnedIds} />
+
+        <div className="progress">
+          <div className="progress-bar" style={{ width: `${progress}%` }} />
+        </div>
+        <p className="progress-text">
+          Tamamlanan: {completedCount} / {total} · Kuyrukta: {queue.length}{' '}
+          kart
+        </p>
+
+        <button className="reset" onClick={reset}>
+          Baştan başla
+        </button>
+      </aside>
+
+      <main className="main">
+        {finished ? (
+          <div className="card">
+            <h2>Tebrikler!</h2>
+            <p>Tüm kartları tamamladın.</p>
+            <p>
+              Toplam puan: {points}, Seviye: {level}
+            </p>
+            <p>
+              İlk denemede doğru: {firstTry} / {total}
+            </p>
+          </div>
+        ) : (
+          <>
+            <LessonCard
+              key={step}
+              lesson={lesson}
+              stage={current.stage}
+              stageLabel={STAGE_LABELS[current.stage]}
+              onAnswer={handleAnswer}
+            />
+            {answered && (
+              <button className="next" onClick={next}>
+                {pending.queue.length === 0 ? 'Bitir' : 'Sonraki kart'}
+              </button>
+            )}
+          </>
+        )}
+      </main>
+    </div>
   )
 }
 

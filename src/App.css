@@ -1,12 +1,185 @@
-.quiz {
-  margin-top: 20px;
-  border-top: 1px solid #dfe6ea;
-  padding-top: 16px;
+.layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px;
+  align-items: start;
 }
 
+/* Sol yan panel */
+.side {
+  position: sticky;
+  top: 24px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 20px;
+  color: #ffffff;
+}
+
+.side h1 {
+  font-size: 20px;
+  margin: 0 0 16px;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.stat {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 10px 4px;
+  text-align: center;
+}
+
+.stat b {
+  display: block;
+  font-size: 22px;
+  color: #0f4c5c;
+}
+
+.stat:nth-child(2) b {
+  color: #e36414;
+}
+
+.stat:nth-child(3) b {
+  color: #2a9d8f;
+}
+
+.stat small {
+  font-size: 11px;
+  color: #6c757d;
+}
+
+.badges {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.badge {
+  background: rgba(255, 255, 255, 0.12);
+  color: #b9d3d9;
+  border-radius: 8px;
+  padding: 7px 10px;
+  font-size: 13px;
+}
+
+.badge.earned {
+  background: #f4a261;
+  color: #3b1d00;
+  font-weight: 600;
+}
+
+.progress {
+  height: 10px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: #f4a261;
+  transition: width 0.3s;
+}
+
+.progress-text {
+  margin: 6px 0 16px;
+  font-size: 13px;
+  color: #cfe3e7;
+}
+
+.reset {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 8px;
+  background: transparent;
+  color: #ffffff;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.reset:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* Sağ ana alan */
+.main {
+  min-width: 0;
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.card h2 {
+  margin: 4px 0 16px;
+  color: #0f4c5c;
+}
+
+.card-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.info {
+  background: #f3f6f8;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.info p {
+  margin-top: 0;
+  line-height: 1.5;
+}
+
+.code {
+  background: #1f2a37;
+  color: #f3f6f8;
+  padding: 12px;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin-bottom: 0;
+}
+
+.tag {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  background: #dff1ee;
+  color: #1f7a70;
+}
+
+.tag.retry {
+  background: #fde2d3;
+  color: #b5540b;
+}
+
+.tag.confirm {
+  background: #e8e0f0;
+  color: #6b3f87;
+}
+
+/* Quiz */
 .prompt {
   white-space: pre-wrap;
   font-weight: 600;
+  margin-top: 0;
 }
 
 .option {
@@ -41,99 +214,32 @@
   margin-top: 12px;
   font-weight: 600;
 }
-.progress {
-  height: 10px;
-  background: #dfe6ea;
-  border-radius: 5px;
-  overflow: hidden;
-}
-
-.progress-bar {
-  height: 100%;
-  background: #2a9d8f;
-  transition: width 0.3s;
-}
-
-.progress-text {
-  margin: 6px 0 16px;
-  font-size: 14px;
-  color: #6c757d;
-}
 
 .next {
   margin-top: 16px;
-  padding: 12px 20px;
+  padding: 12px 24px;
   border: none;
-  border-radius: 8px;
-  background: #0f4c5c;
-  color: #ffffff;
+  border-radius: 10px;
+  background: #f4a261;
+  color: #3b1d00;
   font-size: 15px;
+  font-weight: 700;
   cursor: pointer;
 }
-.stats {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 12px;
+
+.next:hover {
+  background: #f6b27c;
 }
 
-.stats span {
-  background: #ffffff;
-  border: 1px solid #dfe6ea;
-  border-radius: 20px;
-  padding: 6px 14px;
-  font-weight: 600;
-  font-size: 14px;
-  color: #0f4c5c;
-}
-.badges {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 16px;
-}
-
-.badge {
-  background: #eef0f2;
-  color: #8a949b;
-  border-radius: 8px;
-  padding: 6px 10px;
-  font-size: 13px;
-}
-
-.badge.earned {
-  background: #fff3e0;
-  color: #b5540b;
-  border: 1px solid #e36414;
-  font-weight: 600;
-}
-.reset {
-  display: block;
-  margin-top: 32px;
-  padding: 8px 14px;
-  border: 1px solid #b9c5cc;
-  border-radius: 8px;
-  background: transparent;
-  color: #6c757d;
-  font-size: 13px;
-  cursor: pointer;
-}
-.tag {
-  display: inline-block;
-  margin-bottom: 8px;
-  padding: 3px 10px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 600;
-  background: #dff1ee;
-  color: #1f7a70;
-}
-
-.tag.retry {
-  background: #fde2d3;
-  color: #b5540b;
-}
-
-.tag.confirm {
-  background: #e8e0f0;
-  color: #6b3f87;
+/* Dar ekran: her şey alt alta */
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+  .side {
+    position: static;
+  }
+  .card-body {
+    grid-template-columns: 1fr;
+  }
 }

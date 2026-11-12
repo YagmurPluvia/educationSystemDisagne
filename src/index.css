@@ -1,6 +1,8 @@
 body {
   margin: 0;
+  min-height: 100vh;
   font-family: system-ui, Arial, sans-serif;
-  background: #f3f6f8;
+  background: linear-gradient(135deg, #0b3c49 0%, #14707f 100%);
+  background-attachment: fixed;
   color: #1f2a37;
 }

@@ -110,5 +110,33 @@
       "answer": 1,
       "explanation": "Fonksiyon a ve b'yi toplar, return ile 5'i geri verir, print de onu yazdırır."
     }
+  },
+    {
+    "id": "while-dongusu",
+    "order": 9,
+    "difficulty": 3,
+    "title": "while döngüsü",
+    "text": "while, koşul doğru olduğu sürece tekrar eder. Koşulu değiştirmeyi unutursan döngü hiç bitmez.",
+    "code": "n = 3\nwhile n > 0:\n    print(n)\n    n = n - 1",
+    "question": {
+      "prompt": "n = 3\nwhile n > 0:\n    print(n)\n    n = n - 1\n\nEkrana hangi sayılar yazılır?",
+      "options": ["3, 2, 1", "3, 2, 1, 0", "0, 1, 2", "1, 2, 3"],
+      "answer": 0,
+      "explanation": "n 0 olunca n > 0 yanlış olur ve döngü durur, 0 yazdırılmaz."
+    }
+  },
+  {
+    "id": "sozlukler",
+    "order": 10,
+    "difficulty": 3,
+    "title": "Sözlükler (dict)",
+    "text": "Sözlük, değerleri anahtarla saklar. Sıra numarası yerine anahtar kullanılır.",
+    "code": "kisi = {\"ad\": \"Ece\", \"yas\": 20}\nprint(kisi[\"ad\"])",
+    "question": {
+      "prompt": "kisi = {\"ad\": \"Ece\", \"yas\": 20}\nprint(kisi[\"yas\"])\n\nNe yazdırır?",
+      "options": ["ad", "Ece", "20", "Hata verir"],
+      "answer": 2,
+      "explanation": "kisi[\"yas\"] anahtarı \"yas\" olan değeri, yani 20'yi verir."
+    }
   }
 ]

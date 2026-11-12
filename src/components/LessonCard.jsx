@@ -5,9 +5,13 @@ function LessonCard({ lesson, stage, stageLabel, onAnswer }) {
     <div className="card">
       <span className={`tag ${stage}`}>{stageLabel}</span>
       <h2>{lesson.title}</h2>
-      <p>{lesson.text}</p>
-      <pre className="code">{lesson.code}</pre>
-      <Quiz question={lesson.question} onAnswer={onAnswer} />
+      <div className="card-body">
+        <div className="info">
+          <p>{lesson.text}</p>
+          <pre className="code">{lesson.code}</pre>
+        </div>
+        <Quiz question={lesson.question} onAnswer={onAnswer} />
+      </div>
     </div>
   )
 }
