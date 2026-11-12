@@ -1,0 +1,66 @@
+{
+  "A": [
+    {
+      "concept": "variable",
+      "prompt": "x = 4\ny = x * 2\nx = 1\nprint(y)\n\nNe yazdırır?",
+      "options": ["1", "4", "8", "2"],
+      "answer": 2
+    },
+    {
+      "concept": "operators",
+      "prompt": "print(17 % 5) ne yazdırır?",
+      "options": ["3", "2", "3.4", "12"],
+      "answer": 1
+    },
+    {
+      "concept": "conditions",
+      "prompt": "n = 10\nif n > 10:\n    print(\"A\")\nelif n == 10:\n    print(\"B\")\nelse:\n    print(\"C\")\n\nNe yazdırır?",
+      "options": ["C", "A", "B", "Hiçbiri"],
+      "answer": 2
+    },
+    {
+      "concept": "lists",
+      "prompt": "s = [5, 6, 7, 8]\nprint(s[2])\n\nNe yazdırır?",
+      "options": ["6", "8", "5", "7"],
+      "answer": 3
+    },
+    {
+      "concept": "loops",
+      "prompt": "for i in range(4):\n    print(i)\n\nEn son hangi sayı yazılır?",
+      "options": ["4", "3", "2", "5"],
+      "answer": 1
+    }
+  ],
+  "B": [
+    {
+      "concept": "variable",
+      "prompt": "p = 2\nq = p * 5\np = 7\nprint(q)\n\nNe yazdırır?",
+      "options": ["7", "35", "10", "14"],
+      "answer": 2
+    },
+    {
+      "concept": "operators",
+      "prompt": "print(20 // 6) ne yazdırır?",
+      "options": ["2", "3", "4", "14"],
+      "answer": 1
+    },
+    {
+      "concept": "conditions",
+      "prompt": "n = 7\nif n < 5:\n    print(\"X\")\nelif n < 8:\n    print(\"Y\")\nelse:\n    print(\"Z\")\n\nNe yazdırır?",
+      "options": ["X", "Z", "Y", "Y ve Z"],
+      "answer": 2
+    },
+    {
+      "concept": "lists",
+      "prompt": "m = [9, 8, 7]\nprint(m[0])\n\nNe yazdırır?",
+      "options": ["8", "9", "7", "0"],
+      "answer": 1
+    },
+    {
+      "concept": "loops",
+      "prompt": "for i in range(5):\n    print(i)\n\nEn son hangi sayı yazılır?",
+      "options": ["5", "3", "4", "0"],
+      "answer": 2
+    }
+  ]
+}
