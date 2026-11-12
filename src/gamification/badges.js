@@ -7,7 +7,7 @@ export const BADGES = [
   },
   {
     id: 'streak3',
-    name: '3\'lü seri',
+    name: "3'lü seri",
     description: 'Üst üste 3 doğru cevap',
     earned: (s) => s.bestStreak >= 3,
   },
@@ -20,8 +20,8 @@ export const BADGES = [
   {
     id: 'perfect',
     name: 'Kusursuz',
-    description: 'Tüm kartları bitir ve hepsini doğru yap',
-    earned: (s) => s.finished && s.correct === s.total,
+    description: 'Tüm kartları ilk denemede doğru bil',
+    earned: (s) => s.finished && s.firstTry === s.total,
   },
 ]
 

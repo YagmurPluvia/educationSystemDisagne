@@ -1,11 +1,12 @@
-const KEY = 'microlearn-progress-v1'
+const KEY = 'microlearn-progress-v2'
 
 export const DEFAULT_STATE = {
-  index: 0,
+  queue: null,
   points: 0,
   streak: 0,
   bestStreak: 0,
   correct: 0,
+  firstTry: 0,
 }
 
 export function loadProgress() {

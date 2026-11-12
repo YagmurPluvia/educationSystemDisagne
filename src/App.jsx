@@ -3,6 +3,7 @@ import lessons from './content/lessons.json'
 import LessonCard from './components/LessonCard'
 import BadgeList from './components/BadgeList'
 import { getEarnedIds } from './gamification/badges'
+import { createQueue, answerCurrent } from './adaptive/scheduler'
 import {
   loadProgress,
   saveProgress,
@@ -11,60 +12,99 @@ import {
 } from './storage/progress'
 import './App.css'
 
-const POINTS_PER_CORRECT = 10
+const POINTS_NEW = 10
+const POINTS_REPEAT = 5
 const POINTS_PER_LEVEL = 30
 
-const initial = loadProgress()
-initial.index = Math.min(Math.max(initial.index, 0), lessons.length)
+const STAGE_LABELS = {
+  new: 'Yeni kart',
+  retry: 'Tekrar',
+  confirm: 'Pekiştirme',
+}
+
+const allIds = lessons.map((l) => l.id)
+
+function isValidQueue(q) {
+  return (
+    Array.isArray(q) &&
+    q.every((e) => e && allIds.includes(e.id) && STAGE_LABELS[e.stage])
+  )
+}
+
+const saved = loadProgress()
+const initial = {
+  ...saved,
+  queue: isValidQueue(saved.queue) ? saved.queue : createQueue(allIds),
+}
 
 function App() {
-  const [index, setIndex] = useState(initial.index)
-  const [answered, setAnswered] = useState(false)
+  const [queue, setQueue] = useState(initial.queue)
+  const [pending, setPending] = useState(null)
+  const [step, setStep] = useState(0)
   const [points, setPoints] = useState(initial.points)
   const [streak, setStreak] = useState(initial.streak)
   const [bestStreak, setBestStreak] = useState(initial.bestStreak)
   const [correct, setCorrect] = useState(initial.correct)
+  const [firstTry, setFirstTry] = useState(initial.firstTry)
 
-  const finished = index >= lessons.length
-  const progress = Math.round((index / lessons.length) * 100)
-  const position = finished ? lessons.length : index + 1
+  const total = lessons.length
+  const finished = queue.length === 0
+  const answered = pending !== null
+  const completedCount = total - queue.length
+  const progress = Math.round((completedCount / total) * 100)
   const level = Math.floor(points / POINTS_PER_LEVEL) + 1
+
+  const current = finished ? null : queue[0]
+  const lesson = current ? lessons.find((l) => l.id === current.id) : null
 
   const earnedIds = getEarnedIds({
     correct,
     bestStreak,
     finished,
-    total: lessons.length,
+    firstTry,
+    total,
   })
 
   function handleAnswer(isCorrect) {
-    setAnswered(true)
+    const result = answerCurrent(queue, isCorrect)
+    setPending(result)
     if (isCorrect) {
       const newStreak = streak + 1
-      setPoints(points + POINTS_PER_CORRECT)
+      setPoints(points + (result.stage === 'new' ? POINTS_NEW : POINTS_REPEAT))
       setStreak(newStreak)
       setBestStreak(Math.max(bestStreak, newStreak))
       setCorrect(correct + 1)
+      if (result.firstTry) setFirstTry(firstTry + 1)
     } else {
       setStreak(0)
     }
   }
 
   function next() {
-    const newIndex = index + 1
-    setIndex(newIndex)
-    setAnswered(false)
-    saveProgress({ index: newIndex, points, streak, bestStreak, correct })
+    const newQueue = pending.queue
+    setQueue(newQueue)
+    setPending(null)
+    setStep(step + 1)
+    saveProgress({
+      queue: newQueue,
+      points,
+      streak,
+      bestStreak,
+      correct,
+      firstTry,
+    })
   }
 
   function reset() {
     clearProgress()
-    setIndex(DEFAULT_STATE.index)
+    setQueue(createQueue(allIds))
+    setPending(null)
+    setStep(0)
     setPoints(DEFAULT_STATE.points)
     setStreak(DEFAULT_STATE.streak)
     setBestStreak(DEFAULT_STATE.bestStreak)
     setCorrect(DEFAULT_STATE.correct)
-    setAnswered(false)
+    setFirstTry(DEFAULT_STATE.firstTry)
   }
 
   return (
@@ -83,7 +123,7 @@ function App() {
         <div className="progress-bar" style={{ width: `${progress}%` }} />
       </div>
       <p className="progress-text">
-        {position} / {lessons.length}
+        Tamamlanan: {completedCount} / {total} · Kuyrukta: {queue.length} kart
       </p>
 
       {finished ? (
@@ -91,20 +131,24 @@ function App() {
           <h2>Tebrikler!</h2>
           <p>Tüm kartları tamamladın.</p>
           <p>
-            Toplam puan: {points}, Seviye: {level}, Doğru: {correct} /{' '}
-            {lessons.length}
+            Toplam puan: {points}, Seviye: {level}
+          </p>
+          <p>
+            İlk denemede doğru: {firstTry} / {total}
           </p>
         </div>
       ) : (
         <>
           <LessonCard
-            key={lessons[index].id}
-            lesson={lessons[index]}
+            key={step}
+            lesson={lesson}
+            stage={current.stage}
+            stageLabel={STAGE_LABELS[current.stage]}
             onAnswer={handleAnswer}
           />
           {answered && (
             <button className="next" onClick={next}>
-              {index === lessons.length - 1 ? 'Bitir' : 'Sonraki kart'}
+              {pending.queue.length === 0 ? 'Bitir' : 'Sonraki kart'}
             </button>
           )}
         </>

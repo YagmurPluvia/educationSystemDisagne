@@ -117,3 +117,23 @@
   font-size: 13px;
   cursor: pointer;
 }
+.tag {
+  display: inline-block;
+  margin-bottom: 8px;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  background: #dff1ee;
+  color: #1f7a70;
+}
+
+.tag.retry {
+  background: #fde2d3;
+  color: #b5540b;
+}
+
+.tag.confirm {
+  background: #e8e0f0;
+  color: #6b3f87;
+}
